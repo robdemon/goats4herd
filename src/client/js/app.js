@@ -6,34 +6,39 @@ var context = canvasElement.getContext("2d");
 var scalingRatio = 1;
 
 var input = {
-    up: false,
-    down: false,
-    left: false,
-    right: false,
+    key: { up: false, down: false, left: false, right: false },
+    mouse: { x: 0, y: 0 },
+    isKeyBasedMovement: false,
 };
 
 function KeyEvent(keyCode, isKeyPressed) {
+    let hasInputChanged = false;
     switch (keyCode) {
         case 37: // Arrow Left
         case 65: // A
-            input.left = isKeyPressed;
-            SendKeyInputToGame();
+            input.key.left = isKeyPressed;
+            hasInputChanged = true;
             break;
         case 38: // Arrow Up
         case 87: // W
-            input.up = isKeyPressed;
-            SendKeyInputToGame();
+            input.key.up = isKeyPressed;
+            hasInputChanged = true;
             break;
         case 39: // Arrow Right
         case 68: // D
-            input.right = isKeyPressed;
-            SendKeyInputToGame();
+            input.key.right = isKeyPressed;
+            hasInputChanged = true;
             break;
         case 40: // Arrow Down
         case 83: // S
-            input.down = isKeyPressed;
-            SendKeyInputToGame();
+            input.key.down = isKeyPressed;
+            hasInputChanged = true;
             break;
+    }
+
+    if (hasInputChanged) {
+        input.isKeyBasedMovement = true;
+        SendKeyInputToGame(input.key);
     }
 }
 
@@ -163,6 +168,13 @@ function BoardSetup(board) {
     lobbyElement.hidden = true;
 }
 
+function GetMousePositionRelativeToElement(event) {
+    let rect = event.target.getBoundingClientRect();
+    let x = event.clientX - rect.left;
+    let y = event.clientY - rect.top;
+    return { x: x, y: y };
+}
+
 function ListenInputToGame() {
     document.addEventListener("keydown", function (event) {
         KeyEvent(event.keyCode, true);
@@ -170,6 +182,11 @@ function ListenInputToGame() {
 
     document.addEventListener("keyup", function (event) {
         KeyEvent(event.keyCode, false);
+    });
+
+    canvasElement.addEventListener("mousemove", function (event) {
+        input.mouse = GetMousePositionRelativeToElement(event);
+        console.log(input.mouse);
     });
 }
 
@@ -182,8 +199,8 @@ function LobbyStart() {
     socket.emit("game-new-player", dogName, team);
 }
 
-function SendKeyInputToGame() {
-    socket.emit("game-key-input", input);
+function SendKeyInputToGame(keyInput) {
+    socket.emit("game-key-input", keyInput);
 }
 
 socket.on("disconnect", function () {
