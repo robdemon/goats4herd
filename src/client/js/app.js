@@ -111,6 +111,19 @@ function Render(world) {
     for (var goalPostIndex in world.goalPosts) {
         RenderGoalPost(world.goalPosts[goalPostIndex], context);
     }
+
+    if (!input.isKeyBasedMovement) {
+        context.fillStyle = "black";
+        context.beginPath();
+        context.arc(
+            input.mousePosition.x * scalingRatio,
+            input.mousePosition.y * scalingRatio,
+            1,
+            0,
+            2 * Math.PI
+        );
+        context.fill();
+    }
 }
 
 function UserDisconnect(disconnectedDogId) {
@@ -185,7 +198,9 @@ function ListenToGameInput() {
     });
 
     canvasElement.addEventListener("mousemove", function (event) {
-        input.mousePosition = GetMousePositionRelativeToElement(event);
+        let actualMousePosition = GetMousePositionRelativeToElement(event);
+        input.mousePosition.x = actualMousePosition.x / scalingRatio;
+        input.mousePosition.y = actualMousePosition.y / scalingRatio;
         input.isKeyBasedMovement = false;
     });
 
