@@ -58,8 +58,8 @@ io.on("connection", function (socket) {
         io.to(socket.id).emit("game-board-setup", GoatGame.board);
     });
 
-    socket.on("game-key-input", function (input) {
-        GoatGame.SetInputKeyState(socket.id, input);
+    socket.on("game-key-input", function (keyInput) {
+        GoatGame.SetInputKeyState(socket.id, keyInput);
     });
 
     socket.on("game-mouse-touch-input", function (mouseTouchInput) {

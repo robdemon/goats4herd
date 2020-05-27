@@ -7,8 +7,8 @@ var scalingRatio = 1;
 
 var input = {
     key: { up: false, down: false, left: false, right: false },
-    mouse: { x: 0, y: 0 },
-    isKeyBasedMovement: false,
+    mousePosition: { x: 0, y: 0 },
+    isKeyBasedMovement: true,
 };
 
 function KeyEvent(keyCode, isKeyPressed) {
@@ -175,7 +175,7 @@ function GetMousePositionRelativeToElement(event) {
     return { x: x, y: y };
 }
 
-function ListenInputToGame() {
+function ListenToGameInput() {
     document.addEventListener("keydown", function (event) {
         KeyEvent(event.keyCode, true);
     });
@@ -185,9 +185,15 @@ function ListenInputToGame() {
     });
 
     canvasElement.addEventListener("mousemove", function (event) {
-        input.mouse = GetMousePositionRelativeToElement(event);
-        console.log(input.mouse);
+        input.mousePosition = GetMousePositionRelativeToElement(event);
+        input.isKeyBasedMovement = false;
     });
+
+    setInterval(() => {
+        if (!input.isKeyBasedMovement) {
+            SendMouseInputToGame(input.mousePosition);
+        }
+    }, 15);
 }
 
 function LobbyStart() {
@@ -201,6 +207,10 @@ function LobbyStart() {
 
 function SendKeyInputToGame(keyInput) {
     socket.emit("game-key-input", keyInput);
+}
+
+function SendMouseInputToGame(mousePosition) {
+    socket.emit("game-mouse-touch-input", mousePosition);
 }
 
 socket.on("disconnect", function () {
@@ -217,5 +227,5 @@ socket.on("game-user-disconnect", function (disconnectedDogId) {
 
 socket.on("game-board-setup", function (board) {
     BoardSetup(board);
-    ListenInputToGame();
+    ListenToGameInput();
 });
