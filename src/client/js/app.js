@@ -1,3 +1,6 @@
+var GoatMath = require("../../server/lib/goat-math");
+console.log(GoatMath.Distance(0, 0, 3, 4));
+
 var socket = io();
 
 var gameDesiredDimensions = { width: 0, height: 0 };

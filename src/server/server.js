@@ -8,7 +8,7 @@ const { v4: uuidv4 } = require("uuid");
 var GoatGame = require("./goat-game");
 var GoatTelemetry = require("./lib/goat-telemetry");
 
-app.use(express.static(path.join(__dirname, "./../client")));
+app.use(express.static(path.join(__dirname, "./../../dist/client")));
 
 const port = process.env.PORT || 3000;
 server.listen(port, function () {

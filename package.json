@@ -7,7 +7,8 @@
     "build-watch": "nodemon --watch src ./src/server/server.js",
     "start": "node ./src/server/server.js",
     "test": "mocha",
-    "test-watch": "mocha --watch"
+    "test-watch": "mocha --watch",
+    "gulp": "gulp"
   },
   "repository": {
     "type": "git",
@@ -36,7 +37,11 @@
     "uuid": "^8.0.0"
   },
   "devDependencies": {
+    "del": "^5.1.0",
+    "gulp": "^4.0.2",
+    "gulp-cli": "^2.3.0",
     "mocha": "^7.1.1",
-    "nodemon": "^2.0.3"
+    "nodemon": "^2.0.3",
+    "webpack-stream": "^5.2.1"
   }
 }
