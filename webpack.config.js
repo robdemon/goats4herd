@@ -6,4 +6,7 @@ module.exports = {
         library: "app",
         filename: "app.bundle.js",
     },
+    optimization: {
+        minimize: false,
+    },
 };
